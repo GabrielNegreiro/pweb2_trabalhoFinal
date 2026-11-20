@@ -1,0 +1,25 @@
+# Changelog
+
+Todas as alterações relevantes deste projeto serão documentadas neste arquivo.
+
+O formato segue o Keep a Changelog e o projeto usa Versionamento Semântico.
+
+## [0.1.0] - 2026-11-20
+
+### Adicionado
+
+- Estrutura monolítica modular para `auth`, `members`, `workouts` e `checkins`.
+- Servidor Express em TypeScript com validação de ambiente via Zod.
+- Endpoints `GET /api/v1/health` e `GET /api/v1/ready`, incluindo verificação real do PostgreSQL no segundo.
+- Helmet, CORS, logging estruturado de requisições, limite de JSON e encerramento gracioso.
+- Contrato padronizado para respostas de sucesso, erros, JSON inválido e rotas inexistentes.
+- Prisma com os modelos `User`, `Member`, `Workout` e `CheckIn` e migração SQL inicial.
+- Docker Compose para PostgreSQL local com volume persistente e healthcheck.
+- Testes HTTP automatizados com Vitest e Supertest.
+- Documentação de instalação, execução, arquitetura, middlewares e decisões iniciais.
+- Dependências fixadas em versões corrigidas e auditadas para esta entrega.
+
+### Segurança
+
+- Cabeçalhos HTTP de segurança com Helmet e remoção do cabeçalho `X-Powered-By`.
+- Respostas de erro interno sem exposição de stack trace ou detalhes de infraestrutura.

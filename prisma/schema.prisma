@@ -1,0 +1,65 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserRole {
+  ADMIN
+  TRAINER
+  RECEPTIONIST
+}
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique @db.VarChar(255)
+  passwordHash String   @map("password_hash") @db.VarChar(255)
+  role         UserRole @default(RECEPTIONIST)
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  @@map("users")
+}
+
+model Member {
+  id        String    @id @default(uuid())
+  name      String    @db.VarChar(150)
+  email     String    @unique @db.VarChar(255)
+  phone     String?   @db.VarChar(30)
+  birthDate DateTime? @map("birth_date") @db.Date
+  active    Boolean   @default(true)
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  workouts  Workout[]
+  checkIns  CheckIn[]
+
+  @@index([active])
+  @@map("members")
+}
+
+model Workout {
+  id          String    @id @default(uuid())
+  memberId    String    @map("member_id")
+  name        String    @db.VarChar(150)
+  description String?   @db.Text
+  scheduledAt DateTime? @map("scheduled_at")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+  member      Member    @relation(fields: [memberId], references: [id], onDelete: Restrict)
+
+  @@index([memberId])
+  @@map("workouts")
+}
+
+model CheckIn {
+  id          String   @id @default(uuid())
+  memberId    String   @map("member_id")
+  checkedInAt DateTime @default(now()) @map("checked_in_at")
+  createdAt   DateTime @default(now()) @map("created_at")
+  member      Member   @relation(fields: [memberId], references: [id], onDelete: Restrict)
+
+  @@index([memberId, checkedInAt])
+  @@map("check_ins")
+}
